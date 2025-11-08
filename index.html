@@ -56,6 +56,7 @@
 
     <div id="controls">
         <button id="btnScale">Aumentar Tamanho</button>
+        <button id="btnScaleDown">Diminuir Tamanho</button>
         <button id="btnSpeed">Aumentar Velocidade</button>
         <button id="btnStop">Parar Giro</button>
     </div>
@@ -64,8 +65,8 @@
 
         <a-assets>
             <a-asset-item id="car" src="BrainStem.gltf"></a-asset-item>
-            <a-asset-item id="robot" src=" Buggy.gltf"></a-asset-item>
-            <a-asset-item id="drone" src=" RiggedFigure.gltf"></a-asset-item>
+            <a-asset-item id="robot" src="Buggy.gltf"></a-asset-item>
+            <a-asset-item id="drone" src="RiggedFigure.gltf"></a-asset-item>
         </a-assets>
 
         <a-entity light="type: ambient; intensity: 1.5"></a-entity>
@@ -121,23 +122,32 @@
             });
         });
 
+        // Aumentar tamanho
         document.getElementById("btnScale").addEventListener("click", () => {
             if (!currentModel) return;
             currentScale += 0.2;
             currentModel.setAttribute("scale", `${currentScale} ${currentScale} ${currentScale}`);
         });
 
+        // Diminuir tamanho
+        document.getElementById("btnScaleDown").addEventListener("click", () => {
+            if (!currentModel) return;
+            currentScale = Math.max(0.2, currentScale - 0.2); // evita ficar invisível
+            currentModel.setAttribute("scale", `${currentScale} ${currentScale} ${currentScale}`);
+        });
+
+        // Aumentar velocidade
         document.getElementById("btnSpeed").addEventListener("click", () => {
             if (!currentModel || !spinning) return;
             currentSpeed = Math.max(500, currentSpeed - 500);
             currentModel.setAttribute("animation", `property: rotation; to: 0 360 0; loop: true; dur: ${currentSpeed}`);
         });
 
+        // Parar / Retomar rotação
         document.getElementById("btnStop").addEventListener("click", () => {
             if (!currentModel) return;
             if (spinning) {
                 currentModel.removeAttribute("animation");
-
                 spinning = false;
                 document.getElementById("btnStop").innerText = "Retomar Giro";
             } else {
